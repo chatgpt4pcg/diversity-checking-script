@@ -17,16 +17,20 @@ START_TIME = str(datetime.now().isoformat()).replace(":", "_").replace("/", "_")
 
 
 def main(argv):
-    opts, args = getopt.getopt(argv, "s:", ["source="])
+    opts, args = getopt.getopt(argv, "s:n:", ["source=", "n_trial="])
     if opts is None:
         print('Please provide source folder')
         sys.exit(2)
 
     source_folder = ''
+    n_trial = 10
     for opt, arg in opts:
         if opt in ("-s", "--source"):
             source_folder = Path(arg)
             print(f'Source folder: {source_folder}')
+        if opt in ("-n", "--n_trial"):
+            n_trial = int(arg)
+            print(f'Number of trials: {n_trial}')
 
     log_folder = create_log_folder(source_folder)
     teams = list_all_dirs(source_folder)
@@ -74,7 +78,7 @@ def main(argv):
                     })
                     diversity_rate += distance
 
-                output['diversityRate'] = diversity_rate / output['count']
+                output['diversityRate'] = diversity_rate / (n_trial * (n_trial + 1) / 2)
                 json_output = json.dumps(output, indent=2)
                 output_path = create_output_folder(str(team_path / INPUT_STAGE / character.split(".")[0]),
                                                    CURRENT_STAGE, INPUT_STAGE)
