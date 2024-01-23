@@ -34,8 +34,9 @@ def main(argv):
         team_log = f'[{str(datetime.now().isoformat())}] Processing - team: {team}'
         append_log(str(log_folder), team_log)
         team_path = Path(source_folder, team)
-        characters = sorted(list_all_files(str(team_path / INPUT_STAGE)))
+        characters = list_all_files(str(team_path / INPUT_STAGE))
         if characters is not None:
+            characters = sorted(characters)
             for character in characters:
                 character_log = f'[{str(datetime.now().isoformat())}] Processing - team: {team} - character: {character}'
                 append_log(str(log_folder), character_log)
@@ -75,7 +76,8 @@ def main(argv):
 
                 output['diversityRate'] = diversity_rate / output['count']
                 json_output = json.dumps(output, indent=2)
-                output_path = create_output_folder(str(team_path / INPUT_STAGE / character.split(".")[0]), CURRENT_STAGE, INPUT_STAGE)
+                output_path = create_output_folder(str(team_path / INPUT_STAGE / character.split(".")[0]),
+                                                   CURRENT_STAGE, INPUT_STAGE)
                 output_file_path = Path(output_path, f'{character.split(".")[0]}.json')
                 with open(output_file_path, 'w') as f:
                     f.write(json_output)
