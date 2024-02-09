@@ -78,7 +78,7 @@ def main(argv):
                     })
                     diversity_rate += distance
 
-                output['diversityRate'] = diversity_rate / (n_trial * (n_trial + 1) / 2)
+                output['diversityRate'] = diversity_rate / (n_trial * (n_trial + 1) / 2 - n_trial)
                 json_output = json.dumps(output, indent=2)
                 output_path = create_output_folder(str(team_path / INPUT_STAGE / character.split(".")[0]),
                                                    CURRENT_STAGE, INPUT_STAGE)
@@ -99,7 +99,7 @@ def vectorize(similarity_logits: list):
 def generate_cartesian_product(arr1: list, arr2: list):
     lst = []
     for i in range(len(arr1)):
-        for j in range(i, len(arr2)):
+        for j in range(i + 1, len(arr2)):
             lst.append((arr1[i], arr2[j]))
     return lst
 
