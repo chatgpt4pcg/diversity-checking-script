@@ -3,6 +3,7 @@ import json
 import os
 import string
 import sys
+import numpy as np
 from datetime import datetime
 from pathlib import Path
 
@@ -57,12 +58,12 @@ def main(argv):
                     num_trials = data['count']
                     output['count'] = num_trials
                     for i in range(num_trials):
-                        similarity_logits = data['similarities'][i]['raws']
+                        cls_embedding  = data['similarities'][i]['cls_embedding']
                         trial_id = data['similarities'][i]['id'].split('.')[0]
-                        vectorized_logits = vectorize(similarity_logits)
+                        vectorized_emb = np.array(cls_embedding)
                         output['trials'].append({
                             'trial': trial_id,
-                            'vector': vectorized_logits
+                            'vector': vectorized_emb
                         })
 
                 diversity_rate = 0
