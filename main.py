@@ -60,16 +60,15 @@ def main(argv):
                     for i in range(num_trials):
                         cls_embedding  = data['similarities'][i]['cls_embedding']
                         trial_id = data['similarities'][i]['id'].split('.')[0]
-                        vectorized_emb = np.array(cls_embedding)
                         output['trials'].append({
                             'trial': trial_id,
-                            'vector': vectorized_emb
+                            'vector': cls_embedding
                         })
 
                 diversity_rate = 0
                 all_pairs = generate_cartesian_product(output['trials'], output['trials'])
                 for pair in all_pairs:
-                    distance = cosine(pair[0]['vector'], pair[1]['vector'])
+                    distance = cosine(np.array(pair[0]['vector']), np.array(pair[1]['vector']))
                     output['diversities'].append({
                         'pair': {
                             'trial1': pair[0]['trial'],
