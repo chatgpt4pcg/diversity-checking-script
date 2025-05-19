@@ -3,6 +3,7 @@ import json
 import os
 import string
 import sys
+import numpy as np
 from datetime import datetime
 from pathlib import Path
 
@@ -57,18 +58,17 @@ def main(argv):
                     num_trials = data['count']
                     output['count'] = num_trials
                     for i in range(num_trials):
-                        similarity_logits = data['similarities'][i]['raws']
+                        cls_embedding  = data['similarities'][i]['cls_embedding']
                         trial_id = data['similarities'][i]['id'].split('.')[0]
-                        vectorized_logits = vectorize(similarity_logits)
                         output['trials'].append({
                             'trial': trial_id,
-                            'vector': vectorized_logits
+                            'vector': cls_embedding
                         })
 
                 diversity_rate = 0
                 all_pairs = generate_cartesian_product(output['trials'], output['trials'])
                 for pair in all_pairs:
-                    distance = cosine(pair[0]['vector'], pair[1]['vector'])
+                    distance = cosine(np.array(pair[0]['vector']), np.array(pair[1]['vector']))
                     output['diversities'].append({
                         'pair': {
                             'trial1': pair[0]['trial'],
